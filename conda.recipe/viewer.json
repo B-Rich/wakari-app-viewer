@@ -1,0 +1,8 @@
+{
+"name":"viewer", "title": "Viewer",
+"command_list":["wk-viewer", "--port=%(port)s",
+                "--url-prefix=%(urlPrefix)s",
+                "--project-dir=%(projectHome)s"]
+
+}
+
