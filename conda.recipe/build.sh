@@ -2,9 +2,6 @@
 SRC_DIR=$RECIPE_DIR/..
 cd $SRC_DIR
 
-mkdir -p $PREFIX/share/wakari/html
-cp -r static/* $PREFIX/share/wakari/html/viewer
-
 cd ..
 $PYTHON setup.py install
 
