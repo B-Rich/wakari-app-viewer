@@ -2,7 +2,6 @@
 SRC_DIR=$RECIPE_DIR/..
 cd $SRC_DIR
 
-cd ..
 $PYTHON setup.py install
 
 mkdir -p $PREFIX/etc/wakari/apps
