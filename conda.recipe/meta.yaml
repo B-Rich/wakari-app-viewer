@@ -1,0 +1,28 @@
+package:
+  name: workbench    
+  version: 1.1.0 
+
+requirements:
+  build:
+    - python
+    - distribute
+    - flask 0.10
+    - werkzeug
+ 
+  run:
+    - python
+    - flask
+    - flask 0.10
+    - werkzeug
+
+# The build number should be incremented for new builds of the same version
+build:            # (optional)
+  number: 1
+
+# optional Python entry points
+  entry_points:
+    - wk-viewer = viewer.server:main
+
+about:
+  home: https://github.com/ContinuumIO/wakari-viewer-app
+  license: MIT License

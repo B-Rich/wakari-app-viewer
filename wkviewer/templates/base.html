@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8>
+        <title>{% block title %}Wakari{% endblock %}</title>
+
+        <link rel="shortcut icon" href="{{CDN}}/img/favico.png?v=2">
+
+        {% block styles %}
+        <link rel="stylesheet" type="text/css" href="{{CDN}}/css/wakari.css">
+        {% endblock %}
+
+        {% block scripts %}
+        <script type="text/javascript" data-main="{{CDN}}/js/main" src="{{CDN}}/js/require.js"></script>
+        {% endblock %}
+
+    </head>
+    <body>
+        <div class="wrapper">
+
+            {% if request.path != "/login" %}
+                {% include "_navbar.html" %}
+            {% endif %}
+
+            {% set messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="messages" class="container">
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} fade in">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+            {% endif %}
+            
+            <!--Body Block -->
+            {% block content %}
+            {% endblock %}
+            <!--End Body -->
+
+        </div>
+        <!-- wrapper -->
+
+        {% if request.path != "/login" %}
+            {% if config['DEPLOY_TYPE'] != 'enterprise' %}
+                {% include "_footer.html" %}
+            {% endif %}
+        {% endif %}
+
+    </body>
+
+</html>
