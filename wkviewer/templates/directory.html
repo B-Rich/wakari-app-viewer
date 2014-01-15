@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{%block title%}
+{{filename}}
+{%endblock%}
+
+{%block content%}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {{dirpath}}
+        <hr style="margin: 5px 0;">
+        <div class="clearfix">
+            <div class="col-md-2">
+                <a class="btn btn-sm btn-default" style="float: none;"><i class="icon-backward"></i></a>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control input-sm" onChange="changeDir">
+                    {% for dir in dirs%}
+                    <option value="{{dir[1]}}">{{dir[1]}}</option>
+                    {% endfor%}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="list-group">
+        {% for is_dir, item in contents %}
+        <div class="list-group-item">
+            <a href="{{request.path}}/{{item}}"><i class="icon-{{'folder-close' if is_dir else 'file-text'}}"></i> {{item}}</a>
+        </div>
+        {% endfor%}
+    </div>
+
+</div>
+
+<script>
+var changeDir = function(){
+    console.log('changeDir');
+};
+    
+</script>
+{%endblock%}
