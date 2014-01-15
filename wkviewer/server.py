@@ -11,6 +11,7 @@ from flask import render_template
 from flask import current_app, abort
 from os.path import basename, join, isdir, isfile, split, getmtime
 from IPython.nbconvert.exporters import HTMLExporter
+from urllib import quote
 
 def static(filename):
     if app_settings.APP_CDN:
@@ -84,20 +85,20 @@ def content(path=''):
     if isdir(full_path):
         project_dirbase = basename(current_app.config['PROJECT_DIR'])
         dirpath = join(project_dirbase, path)
-        dirs = [('/', project_dirbase)]
-
+        dirs = [(current_app.config['URL_PREFIX'], project_dirbase)]
         for d in path.split(os.sep):
             if d:
-                prev = join(dirs[-1][0], d)
+                prev = join(dirs[-1][0], quote(d))
                 dirs.append((prev, d))
                 
         is_dir = lambda item: isdir(join(full_path, item))
-        contents = [(is_dir(item), item) for item in os.listdir(full_path) if not item.startswith('.')]
+        
+        contents = [(is_dir(item), item) for item in sorted(os.listdir(full_path)) if not item.startswith('.')]
         
         return render_template('directory.html',
                                filename=basename(path),
                                dirpath=dirpath,
-                               dirs=dirs,
+                               dirs=dirs[::-1],
                                contents=contents)
     elif isfile(full_path):
         renderer = get_renderer(full_path)
@@ -124,7 +125,7 @@ def make_app(project_dir, url_prefix):
 
 def main():
     parser = ArgumentParser(description='Wakari Workbench')
-    parser.add_argument('--port', default=5000, type=int)
+    parser.add_argument('-p', '--port', default=5000, type=int)
     parser.add_argument('--url-prefix', default='')
     parser.add_argument('--project-dir', default=os.getcwd())
     parser.add_argument('-d', '--debug', action='store_true')

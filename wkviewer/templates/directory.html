@@ -15,9 +15,9 @@
                 <a class="btn btn-sm btn-default" style="float: none;"><i class="icon-backward"></i></a>
             </div>
             <div class="col-md-2">
-                <select class="form-control input-sm" onChange="changeDir">
+                <select class="form-control input-sm" onChange="changeDir(this);">
                     {% for dir in dirs%}
-                    <option value="{{dir[1]}}">{{dir[1]}}</option>
+                    <option value="{{dir[0]}}">{{dir[1]}}</option>
                     {% endfor%}
                 </select>
             </div>
@@ -26,7 +26,7 @@
     <div class="list-group">
         {% for is_dir, item in contents %}
         <div class="list-group-item">
-            <a href="{{request.path}}/{{item}}"><i class="icon-{{'folder-close' if is_dir else 'file-text'}}"></i> {{item}}</a>
+            <a href="{{request.path.rstrip('/')}}/{{item}}"><i class="icon-{{'folder-close' if is_dir else 'file-text'}}"></i> {{item}}</a>
         </div>
         {% endfor%}
     </div>
@@ -34,8 +34,11 @@
 </div>
 
 <script>
-var changeDir = function(){
-    console.log('changeDir');
+var changeDir = function(item){
+    value = item.options[item.selectedIndex].value;
+    if (value){
+        location.href = value;    
+    }
 };
     
 </script>
