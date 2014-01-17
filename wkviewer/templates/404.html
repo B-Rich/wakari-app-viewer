@@ -9,16 +9,15 @@
     <div class="container center ">
         <div class="row clearfix">
             <div class=" jumbotron col-offset-2 col-6">
-                <h1>{{ self.title() }}
-                <br>
-                <small class="text-danger"> {%block summary%}
-                    {%endblock%} </small></h1>
-
-                <h2> I think you went to the wrong page. </h2>
-                <h4> But that's okay.</h4>
-                <p>
-                    <a href="/" class="btn btn-large btn-primary">Go Home</a>
-                </p>
+                <h2>
+                    File {{path}} not found
+                </h2>
+                  <p>
+                      This process is running as the user <strong>{{user}}</strong>
+                      <br>
+                      Perhaps the owner of this projcet forgot to run:
+                      <code><pre>chmod o+r {{path}}</pre></code>
+                  </p>
             </div>
         </div>
     </div>

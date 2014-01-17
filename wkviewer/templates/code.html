@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{%block title%}
+{{filename}}
+{%endblock%}
+
+{%block navbar%}
+<div class="navbar-form navbar-right">
+    <a class="btn btn-default" href="{{url_for(request.endpoint, raw=1, **request.view_args)}}">Raw</a>
+</div>        
+{%endblock%}
+
+
+{% block styles %}
+{{super()}}
+<style>
+{% include "pygments.css" %}    
+</style>
+{%endblock%}
+
+{%block content%}
+{{code|safe}}
+{%endblock%}

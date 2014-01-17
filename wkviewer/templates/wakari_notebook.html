@@ -1,55 +1,75 @@
 {%- extends 'basic.tpl' -%}
 {% from 'mathjax.tpl' import mathjax %}
 
-
 {%- block header -%}
 <!DOCTYPE html>
 <html>
-<head>
+    <head>
 
-<meta charset="utf-8" />
-<title>{{resources['metadata']['name']}}</title>
+        <meta charset="utf-8" />
+        <title>{{resources['metadata']['name']}}</title>
+        {% for css in resources.inlining.css -%}
+        <style type="text/css">
+            {{ css }}
+        </style>
+        {% endfor %}
 
-{% for css in resources.inlining.css -%}
-    <style type="text/css">
-    {{ css }}
-    </style>
-{% endfor %}
+        <style type="text/css">
+            /* Overrides of notebook CSS for static HTML export */
+            body {
+                overflow: visible;
+                padding: 8px;
+            }
+            .input_area {
+                padding: 0.2em;
+            }
 
-<style type="text/css">
-/* Overrides of notebook CSS for static HTML export */
-body {
-  overflow: visible;
-  padding: 8px;
-}
-.input_area {
-  padding: 0.2em;
-}
+            pre {
+                padding: 0.2em;
+                border: none;
+                margin: 0px;
+                font-size: 13px;
+            }
 
-pre {
-  padding: 0.2em;
-  border: none;
-  margin: 0px;
-  font-size: 13px;
-}
-</style>
+        {%include "bootstrap.css" %}
 
-<!-- Custom stylesheet, it must be in the same directory as the html file -->
-<link rel="stylesheet" type="text/css" href="{{CDN}}/css/wakari.css">
+        
+        </style>
 
-<!-- Loading mathjax macro -->
-{{ mathjax() }}
+        <!-- Loading mathjax macro -->
+        {{ mathjax() }}
 
-</head>
-{%- endblock header -%}
+    </head>
+    {%- endblock header -%}
 
-{% block body %}
-<body>
-{% include "_navbar.html" %}
-{{ super() }}
-</body>
-{%- endblock body %}
+    {% block body %}
+    <body style="padding-top: 70px;">
+        
+            <nav class="wnavbar wnavbar-default wnavbar-fixed-top" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="container">
+                    <div class="wnavbar-header">
+                        <div class="wnavbar-form wnavbar-left">
+                            <a class="wbtn wbtn-default" href="{{url_for(request.endpoint, path=dirname)}}">&laquo;</a>
+                        </div>
+                        <a class="wnavbar-brand" href="#">
+                            {{resources['metadata']['name']}}
+                        </a>
+                    </div>
+                    <div class="wnavbar-form wnavbar-right">
+                        <a class="wbtn wbtn-success" href="#">Run/Edit this notebook</a>
+                        <a class="wbtn wbtn-default" href="{{url_for(request.endpoint, raw=1, **request.view_args)}}">Raw</a>
+                    </div>        
+                </div>
+            </nav>
 
-{% block footer %}
+        <div class="container">
+            {{ super() }}
+        </div>
+
+    </body>
+    {%- endblock body %}
+
+    {% block footer %}
 </html>
 {% endblock footer %}

@@ -4,14 +4,20 @@ Created on Jan 13, 2014
 @author: sean
 '''
 from wkviewer import settings as app_settings
-from flask import Flask, url_for, Blueprint
+from flask import Flask, url_for, Blueprint, request
 from argparse import ArgumentParser
 import os
 from flask import render_template
 from flask import current_app, abort
-from os.path import basename, join, isdir, isfile, split, getmtime
+from os.path import basename, join, isdir, isfile, split, getmtime, dirname
 from IPython.nbconvert.exporters import HTMLExporter
 from urllib import quote
+from pygments.lexers import get_lexer_for_filename
+from pygments.util import ClassNotFound
+from pygments.formatters.html import HtmlFormatter
+from pygments import highlight
+import getpass
+import re
 
 def static(filename):
     if app_settings.APP_CDN:
@@ -27,36 +33,39 @@ def context_processor():
     return d
 
 def handle404(err):
-    return render_template('404.html')
+    path = request.path[len(current_app.config['URL_PREFIX']) + 1:]
+    return render_template('404.html',
+                           path=path,
+                           up=dirname(path),
+                           user=getpass.getuser(),
+                           )
 
 blueprint = Blueprint('viewer', __name__)
 
 def raw_renderer(full_path):
     g = open(full_path)
-    return current_app.response_class(g, direct_passthrough=True)
+    res = current_app.response_class(g, direct_passthrough=True)
+    res.headers['Content-Type'] = 'text/plain'
+    return res
 
-from jinja2 import Template
-
-class TemplateWithContext(Template):
-    def render(self, *args, **kwargs):
-        ctx = {}
-        current_app.update_template_context(ctx)
-        ctx.update(kwargs)
-        return Template.render(self, *args, **ctx)
 
 def nb_renderer(full_path):
     directory, base = split(full_path)
     cache_file = join(directory, '.%s.html' % base)
-    try:
-        if isfile(cache_file) and getmtime(full_path) < getmtime(cache_file):
-            current_app.logger.debug('Using Cache File')
-            return raw_renderer(cache_file)
-    except:
-        current_app.logger.warn('There was an error reading from the cache file')
+    if not current_app.config.get('DEBUG'):
+        try:
+            if isfile(cache_file) and getmtime(full_path) < getmtime(cache_file):
+                current_app.logger.debug('Using Cache File')
+                return raw_renderer(cache_file)
+        except:
+            current_app.logger.warn('There was an error reading from the cache file')
     
     ex = HTMLExporter(extra_loaders=[current_app.jinja_env.loader],
                       template_file='wakari_notebook.html')
-    ex.environment.template_class = TemplateWithContext
+    
+    ex.environment.globals.update(current_app.jinja_env.globals)
+    current_app.update_template_context(ex.environment.globals)
+    ex.environment.globals.update(dirname=dirname(request.view_args['path']))
     
     output, _ = ex.from_filename(full_path)
     
@@ -66,16 +75,64 @@ def nb_renderer(full_path):
             fd.write(output)
     except:
         current_app.logger.warn('There was an error writing to the cache file')
-    
+        
     return output
     
+def pygments_renderer(full_path):
+    lexer = get_lexer_for_filename(full_path)
+    formatter = HtmlFormatter(linenos=True, 
+                              anchorlinenos=True,
+                              cssclass="source")
+    with open(full_path) as fd:
+        code = highlight(fd.read(), lexer, formatter)
+        
+    return render_template('code.html', code=code,
+                           up=dirname(request.view_args['path']),
+                           name=basename(full_path),
+                           )
+
 def get_renderer(full_path):
     if full_path.endswith('.ipynb'):
         return nb_renderer
+    else:
+        try:
+            get_lexer_for_filename(full_path)
+            return pygments_renderer 
+        except ClassNotFound:
+            return raw_renderer
         
     return raw_renderer
 
 
+def filter_files(top, pat, files):
+    print re.escape(pat)
+    pat = re.escape(pat).replace('\*', '.*')
+    print pat
+    cpat = re.compile(pat)
+    
+    for dirpath, dirnames, filenames in files:
+        if '/.' in dirpath: continue
+        for dirname in dirnames:
+            if dirname.startswith('.'): continue
+            if cpat.match(dirname):
+                yield True, join(dirpath, dirname)[len(top) + 1:]
+        
+        for filename in filenames:
+            if filename.startswith('.'): continue
+            
+            print pat, filename
+            if cpat.match(filename):
+                yield False, join(dirpath, filename)[len(top) + 1:]
+        
+        
+@blueprint.route('/search')
+def search(path=''):
+    pat = request.args.get('glob')
+    top = current_app.config['PROJECT_DIR']
+    files = os.walk(top)
+    listing = filter_files(top, pat, files)
+    return render_template('search.html', listing=listing,
+                           pat=pat)
 
 @blueprint.route('/')
 @blueprint.route('/<path:path>')
@@ -98,10 +155,16 @@ def content(path=''):
         return render_template('directory.html',
                                filename=basename(path),
                                dirpath=dirpath,
+                               up=dirname(path),
+                               name=dirpath,
                                dirs=dirs[::-1],
                                contents=contents)
     elif isfile(full_path):
-        renderer = get_renderer(full_path)
+        if request.args.get('raw'):
+            renderer = raw_renderer
+        else:
+            renderer = get_renderer(full_path)
+            
         return renderer(full_path)
     else:
         abort(404)

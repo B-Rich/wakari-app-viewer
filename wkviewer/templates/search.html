@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{%block title%}
+Find {{pat}}
+{%endblock%}
+
+{% block styles %}
+{{super()}}
+<style>
+    {% include "pygments.css" %}
+</style>
+{%endblock%}
+
+{%block content%}
+<div class="list-group">
+    {% for is_dir, item in listing %}
+    <div class="list-group-item">
+        <a href="{{url_for('viewer.content', path=item)}}"><i class="icon-{{'folder-close' if is_dir else 'file-text'}}"></i> {{item}}</a>
+    </div>
+    {% endfor %}
+</div>
+{%endblock%}

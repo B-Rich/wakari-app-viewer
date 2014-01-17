@@ -7,50 +7,67 @@
         <link rel="shortcut icon" href="{{CDN}}/img/favico.png?v=2">
 
         {% block styles %}
-        <link rel="stylesheet" type="text/css" href="{{CDN}}/css/wakari.css">
-        {% endblock %}
-
-        {% block scripts %}
-        <script type="text/javascript" data-main="{{CDN}}/js/main" src="{{CDN}}/js/require.js"></script>
+        <link rel="stylesheet" type="text/css" href="{{CDN}}/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="{{CDN}}/css/font-awesome.css">
         {% endblock %}
 
     </head>
-    <body>
+    <body style="padding-top: 70px;">
         <div class="wrapper">
 
-            {% if request.path != "/login" %}
-                {% include "_navbar.html" %}
-            {% endif %}
+            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    {%block navbar_left%}
+                    <div class="navbar-form navbar-left">
+                        {% if request.endpoint %}
+                        <a class="btn btn-default {{'' if request.view_args['path'] else 'disabled'}}" href="{{url_for(request.endpoint, path=up)}}">&laquo;</a>
+                        {% endif %}
+                    </div>
+                    {%endblock%}
+                    {% if name %}
+                    <a class="navbar-brand" href="{{ WOC }}/">{{name}}</a>
+                    {% else %}
+                    <a class="navbar-brand" href="{{ WOC }}/">{{name}}</a>
+                    <a class="navbar-brand" href="{{url_for('viewer.content')}}">Wakari:Viewer</a>
+                    {% endif %}
+                    <form class="navbar-form navbar-right" role="search" action="{{url_for('viewer.search')}}" >
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Find File (try *.ipynb)" name="glob" value="{{request.args.get('glob', '')}}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="icon-search"></i>
+                        </button>
+                    </form>
+                    {%block navbar%}
+
+                    {%endblock%}
+                </div>
+            </nav>
 
             {% set messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div id="messages" class="container">
-                    {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} fade in">
-                        <button type="button" class="close" data-dismiss="alert">×</button>
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-
-
+            <div id="messages" class="container">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} fade in">
+                    <button type="button" class="close" data-dismiss="alert">
+                        ×
+                    </button>
+                    {{ message }}
                 </div>
+                {% endfor %}
+
+            </div>
             {% endif %}
-            
+
             <!--Body Block -->
             <div class="container">
-            {% block content %}
-            {% endblock %}
+                {% block content %}
+                {% endblock %}
             </div>
             <!--End Body -->
 
         </div>
         <!-- wrapper -->
-
-        {% if request.path != "/login" %}
-            {% if config['DEPLOY_TYPE'] != 'enterprise' %}
-                {% include "_footer.html" %}
-            {% endif %}
-        {% endif %}
 
     </body>
 
