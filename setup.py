@@ -8,10 +8,14 @@ if 'develop' in sys.argv:
 else:
     from distutils.core import setup
 
-
+try:
+    from wkviewer import __version__ as version
+except ImportError:
+    version = '???'
+    
 setup(
     name='wk-viewer',
-    version="1.0.0",
+    version=version,
     author='Continuum Analytics',
     author_email='wakari-dev@continuum.io',
     description='Wakari Read-only File viewer application',
