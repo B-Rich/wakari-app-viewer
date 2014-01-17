@@ -6,14 +6,12 @@ requirements:
   build:
     - python
     - distribute
-    - flask 0.10
-    - werkzeug
  
   run:
     - python
     - flask
-    - flask 0.10
     - werkzeug
+    - ipython-we
 
 # The build number should be incremented for new builds of the same version
 build:            # (optional)
@@ -21,7 +19,7 @@ build:            # (optional)
 
 # optional Python entry points
   entry_points:
-    - wk-viewer = viewer.server:main
+    - wk-viewer = wkviewer.server:main
 
 about:
   home: https://github.com/ContinuumIO/wakari-viewer-app
