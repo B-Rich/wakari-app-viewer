@@ -1,5 +1,5 @@
 .sourcetable {min-width: 100%;}
-.linenos {max-width: 8px;}
+.linenodiv > pre > a { white-space:nowrap; }
 .linenodiv > pre {border-top-right-radius: 0; border-bottom-right-radius: 0; }
 .source > pre {border-top-left-radius: 0; border-bottom-left-radius: 0; }
 .hll { background-color: #ffffcc }
