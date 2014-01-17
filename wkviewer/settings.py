@@ -1,7 +1,11 @@
+import os as _os
 
 APP_CDN = None
 CDN = 'https://wakari-static.s3.amazonaws.com/latest'
 WOC = 'http://localhost:5000'
+URL_PREFIX = ''
+PROJECT_DIR = _os.path.abspath(_os.getcwd())
+
 
 
 def config_files(filename=None):

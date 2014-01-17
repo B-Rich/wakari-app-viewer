@@ -20,7 +20,7 @@ setup(
     author_email='wakari-dev@continuum.io',
     description='Wakari Read-only File viewer application',
     packages=['wkviewer'],
-    install_requires=['Flask', 'werkzeug'],
+    install_requires=['Flask', 'werkzeug','ipython', 'pygments'],
     include_package_data=True,
     package_data = {'wkviewer':['templates/*']},
     zip_safe=False,
