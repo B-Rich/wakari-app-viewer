@@ -13,10 +13,20 @@ Find {{pat}}
 
 {%block content%}
 <div class="list-group">
+    {% if pat %}
     {% for is_dir, item in listing %}
     <div class="list-group-item">
         <a href="{{url_for('viewer.content', path=item)}}"><i class="icon-{{'folder-close' if is_dir else 'file-text'}}"></i> {{item}}</a>
     </div>
+    {% else %}
+    <div class="alert alert-info">
+        No files matching <strong>{{pat}}</strong> found
+    </div>
     {% endfor %}
+    {% else %}
+    <div class="alert alert-warning">
+        Please enter a serach query
+    </div>
+    {% endif %}
 </div>
 {%endblock%}

@@ -18,32 +18,47 @@ from wkviewer.renderer import get_renderer, raw_renderer
 blueprint = Blueprint('viewer', __name__)
 
 def filter_files(top, pat, files):
-    print re.escape(pat)
     pat = re.escape(pat).replace('\*', '.*')
-    print pat
     cpat = re.compile(pat)
+    i = 0; j = 0;  # Limit the number of files searched so the request does not hang
     
+    baselen = len(top)
+    if not top.endswith('/'):
+        baselen += 1
+         
     for dirpath, dirnames, filenames in files:
         if '/.' in dirpath: continue
         for dirname in dirnames:
+            j += 1
             if dirname.startswith('.'): continue
             if cpat.match(dirname):
-                yield True, join(dirpath, dirname)[len(top) + 1:]
+                yield True, join(dirpath, dirname)[baselen:]
+                i += 1; 
+                if i > 100: return
         
         for filename in filenames:
+            j += 1
             if filename.startswith('.'): continue
             
-            print pat, filename
             if cpat.match(filename):
-                yield False, join(dirpath, filename)[len(top) + 1:]
+                yield False, join(dirpath, filename)[baselen:]
+                i += 1; 
+                if i > 100: return
+                
+        if j > 50000: return  # 50000 files is enough
         
         
 @blueprint.route('/search')
 def search(path=''):
     pat = request.args.get('glob')
+    print 'app_settings.PROJECT_DIR', app_settings.PROJECT_DIR
     top = app_settings.PROJECT_DIR
-    files = os.walk(top)
-    listing = filter_files(top, pat, files)
+    if pat:
+        files = os.walk(top)
+        listing = filter_files(top, pat, files)
+    else:
+        listing = None
+        
     return render_template('search.html', listing=listing,
                            pat=pat)
 
