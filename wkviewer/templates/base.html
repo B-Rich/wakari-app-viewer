@@ -25,9 +25,8 @@
                     </div>
                     {%endblock%}
                     {% if name %}
-                    <a class="navbar-brand" href="{{ WOC }}/">{{name}}</a>
+                    <a class="navbar-brand" href="{{url_for('viewer.content')}}">{{name}}</a>
                     {% else %}
-                    <a class="navbar-brand" href="{{ WOC }}/">{{name}}</a>
                     <a class="navbar-brand" href="{{url_for('viewer.content')}}">Wakari:Viewer</a>
                     {% endif %}
                     <form class="navbar-form navbar-right" role="search" action="{{url_for('viewer.search')}}" >
