@@ -34,6 +34,16 @@ def handle404(err):
                            user=getpass.getuser(),
                            )
 
+
+def handle500(err):
+    path = request.path[len(app_settings.URL_PREFIX) + 1:]
+    return render_template('500.html',
+                           path=path,
+                           up=dirname(path),
+                           user=getpass.getuser(),
+                           )
+
+
 def make_app(project_dir, url_prefix):
     app_args = {}
     
@@ -47,6 +57,7 @@ def make_app(project_dir, url_prefix):
     app.context_processor(context_processor)
 
     app.errorhandler(404)(handle404)
+    app.errorhandler(500)(handle500)
 
     return app
 

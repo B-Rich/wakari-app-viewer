@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{%block title%}
+500: Server Error
+{%endblock%}
+
+{%block content%}
+<body>
+    <div class="container center ">
+        <div class="row clearfix">
+            <div class=" jumbotron col-offset-2 col-6">
+                <h2>
+                    Opps, we experienced a 500 error trying to load {{path}}
+                </h2>
+                  <p>
+                      This process is running as the user <strong>{{user}}</strong>
+                      <br>
+                      Perhaps the owner of this projcet forgot to run:
+                      <code><pre>chmod o+r {{path}}</pre></code>
+                      or:
+                      <code><pre>chmod o+x {{up}}</pre></code>
+                  </p>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+{%endblock%}

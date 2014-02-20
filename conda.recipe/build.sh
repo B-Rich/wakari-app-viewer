@@ -6,3 +6,7 @@ $PYTHON setup.py install --single-version-externally-managed --record=record.tx
 
 mkdir -p $PREFIX/etc/wakari/apps
 cp $RECIPE_DIR/viewer.json $PREFIX/etc/wakari/apps/viewer.json
+
+POST_LINK=$PREFIX/bin/.${PKG_NAME}-post-link.sh
+cp $RECIPE_DIR/post-link.sh $POST_LINK
+chmod +x $POST_LINK
