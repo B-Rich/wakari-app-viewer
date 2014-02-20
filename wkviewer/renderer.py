@@ -12,12 +12,18 @@ from pygments.lexers import get_lexer_for_filename
 from pygments.util import ClassNotFound
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight
+import mimetypes
 
 
 def raw_renderer(full_path):
     g = open(full_path)
     res = current_app.response_class(g, direct_passthrough=True)
-    res.headers['Content-Type'] = 'text/plain'
+    mimetype, _ = mimetypes.guess_type(full_path)
+    
+    if mimetype is None:
+        mimetype = 'application/octet-stream'
+        
+    res.headers['Content-Type'] = mimetype
     return res
 
 
