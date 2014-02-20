@@ -12,6 +12,7 @@ requirements:
     - flask
     - werkzeug
     - ipython-we
+    - pandoc
 
 # The build number should be incremented for new builds of the same version
 build:            # (optional)
