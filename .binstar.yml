@@ -1,0 +1,11 @@
+package: wk-viewer
+user: wakari
+
+install:
+    - conda config  --add channels https://conda.binstar.org/wakari
+    - conda info
+
+script:
+  - conda build conda.recipe
+
+build_targets: conda
