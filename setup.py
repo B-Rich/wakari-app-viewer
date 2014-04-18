@@ -6,20 +6,20 @@ try:
     from wkviewer import __version__ as version
 except ImportError:
     version = '???'
-    
+
 setup(
-    name='wk-viewer',
+    name='wakari-app-viewer',
     version=version,
     author='Continuum Analytics',
     author_email='wakari-dev@continuum.io',
     description='Wakari Read-only File viewer application',
     packages=['wkviewer'],
-    install_requires=['Flask', 'werkzeug','ipython', 'pygments'],
+    install_requires=['Flask', 'werkzeug', 'ipython', 'pygments'],
     include_package_data=True,
-    package_data = {'wkviewer':['templates/*']},
+    package_data={'wkviewer': ['templates/*']},
     zip_safe=False,
-    entry_points = {
-        'console_scripts' : [
+    entry_points={
+        'console_scripts': [
             'wk-viewer = wkviewer.server:main'
             ]
     }
