@@ -1,4 +1,4 @@
-package: wk-viewer
+package: wakari-app-viewer
 user: wakari
 
 install:
