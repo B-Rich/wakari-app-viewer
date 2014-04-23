@@ -24,7 +24,7 @@ build:            # (optional)
 
 # optional Python entry points
   entry_points:
-    - wk-viewer = wkviewer.server:main
+    - wk-app-viewer = wkviewer.server:main
 
 about:
   home: https://github.com/ContinuumIO/wakari-app-viewer

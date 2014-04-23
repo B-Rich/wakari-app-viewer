@@ -18,7 +18,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'wk-viewer = wkviewer.server:main'
+            'wk-app-viewer = wkviewer.server:main'
             ]
     }
 )

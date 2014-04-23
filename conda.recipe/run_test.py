@@ -14,7 +14,7 @@ std_kwargs = {
 
 try:
     print('starting server')
-    process = subprocess.Popen('wk-viewer', shell=True, **std_kwargs)
+    process = subprocess.Popen('wk-app-viewer', shell=True, **std_kwargs)
     url = "localhost:5000"
 
     #wait for file-xfer-legacy to come up

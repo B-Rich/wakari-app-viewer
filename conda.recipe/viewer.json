@@ -1,9 +1,9 @@
 {
 "name":"viewer", "title": "Viewer",
-"command_list":["POST_INSTALL_ENV_PLACEHOLDER/bin/wk-viewer", "--port=%(port)s",
+"command_list":["POST_INSTALL_ENV_PLACEHOLDER/bin/wk-app-viewer", "--port=%(port)s",
                 "--url-prefix=%(urlPrefix)s",
                 "--project-dir=%(projectHome)s"],
-                
+
 "scopes": ["user:username", "project:heartbeat", "project:read", "project:state"],
 "permission": "read",
 "enabled": true,
