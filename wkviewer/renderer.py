@@ -34,10 +34,10 @@ def nb_renderer(full_path):
     if not current_app.config.get('DEBUG'):
         try:
             if isfile(cache_file) and getmtime(full_path) < getmtime(cache_file):
-                current_app.logger.debug('Using Cache File')
+                current_app.logger.debug('Using Cache File %s' % cache_file)
                 return raw_renderer(cache_file)
         except:
-            current_app.logger.warn('There was an error reading from the cache file')
+            current_app.logger.warn('There was an error reading from the cache file %s' % cache_file)
 
     ex = HTMLExporter(extra_loaders=[current_app.jinja_env.loader],
                       template_file='wakari_notebook.html')
@@ -51,14 +51,14 @@ def nb_renderer(full_path):
 
     try:
         with open(cache_file, 'w') as fd:
-            current_app.logger.debug('Writing Cache File')
+            current_app.logger.debug('Writing Cache File %s' % cache_file)
             fd.write(output.encode(errors='replace'))
     except OSError:
-        current_app.logger.warn('There was an error writing to the cache file')
+        current_app.logger.warn('There was an error writing to the cache file %s' % cache_file)
         try:
             if isfile(cache_file): os.unlink(cache_file)
         except OSError:
-            current_app.logger.warn('There was an removing cache file')
+            current_app.logger.warn('There was an error removing the cache file %s' % cache_file)
             pass
 
     return output
