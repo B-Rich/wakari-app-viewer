@@ -55,8 +55,13 @@ def make_app(project_dir, url_prefix):
 
     app.url_map.strict_slashes = False
     app.config.update(HOME_DIR=project_dir)
-    
-    views.blueprint.register(app, {'url_prefix': url_prefix})
+
+    # Setup the url_prefix for mounting by stripping off the slash
+    # that's on the URL.
+    options = {'url_prefix': url_prefix}
+    if url_prefix.endswith('/'):
+        options['url_prefix'] = url_prefix[:-1]
+    views.blueprint.register(app, options)
     app.context_processor(context_processor)
 
     app.errorhandler(404)(handle404)
