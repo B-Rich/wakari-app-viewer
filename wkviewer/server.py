@@ -13,6 +13,8 @@ from os.path import dirname
 import getpass
 import views
 
+from . import utils
+
 def static(filename):
     if app_settings.APP_CDN:
         return '%s/%s' % (app_settings.APP_CDN, filename)
@@ -26,8 +28,9 @@ def context_processor():
     d['WOC'] = app_settings.WOC
     return d
 
+
 def handle404(err):
-    path = request.path[len(app_settings.URL_PREFIX) + 1:]
+    path = utils.without_prefix(request.path)
     return render_template('404.html',
                            path=path,
                            up=dirname(path),
@@ -36,7 +39,7 @@ def handle404(err):
 
 
 def handle500(err):
-    path = request.path[len(app_settings.URL_PREFIX) + 1:]
+    path = utils.without_prefix(request.path)
     return render_template('500.html',
                            path=path,
                            up=dirname(path),
