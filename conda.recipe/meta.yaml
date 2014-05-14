@@ -4,6 +4,8 @@ package:
 
 build:
   number: {{environ.get('BINSTAR_BUILD', 1)}}
+  entry_points:
+    - wk-app-viewer = wkviewer.server:main
 
 requirements:
   build:
@@ -17,10 +19,6 @@ requirements:
     - ipython-we
     - pygments
     - pandoc
-
-# optional Python entry points
-  entry_points:
-    - wk-app-viewer = wkviewer.server:main
 
 about:
   home: https://github.com/ContinuumIO/wakari-app-viewer
