@@ -18,10 +18,6 @@ requirements:
     - pygments
     - pandoc
 
-# The build number should be incremented for new builds of the same version
-build:            # (optional)
-  number: 1
-
 # optional Python entry points
   entry_points:
     - wk-app-viewer = wkviewer.server:main
