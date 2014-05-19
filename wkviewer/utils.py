@@ -1,3 +1,6 @@
+from . import settings as app_settings
+
+
 def without_prefix(some_path):
     prefix_length = len(app_settings.URL_PREFIX)
 
