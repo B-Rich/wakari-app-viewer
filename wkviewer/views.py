@@ -65,6 +65,9 @@ def search(path=''):
 @blueprint.route('/')
 @blueprint.route('/<path:path>')
 def content(path=''):
+    if '..' in path:
+        abort(403)
+
     full_path = os.path.join(app_settings.PROJECT_DIR, path)
 
     if isdir(full_path):
