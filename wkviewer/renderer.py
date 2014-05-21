@@ -53,7 +53,7 @@ def nb_renderer(full_path):
         with open(cache_file, 'w') as fd:
             current_app.logger.debug('Writing Cache File %s' % cache_file)
             fd.write(output.encode(errors='replace'))
-    except OSError:
+    except (OSError, IOError):
         current_app.logger.warn('There was an error writing to the cache file %s' % cache_file)
         try:
             if isfile(cache_file): os.unlink(cache_file)
